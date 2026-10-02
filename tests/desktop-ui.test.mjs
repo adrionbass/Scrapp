@@ -1,0 +1,111 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+
+test("desktop UI exposes both project input methods and export choices", async () => {
+  const html = await readFile(new URL("../desktop/index.html", import.meta.url), "utf8");
+  const css = await readFile(new URL("../desktop/styles.css", import.meta.url), "utf8");
+  assert.match(html, /class="scrapp-logo" role="img" aria-label="Scrapp"/);
+  assert.match(html, /id="language-toggle"/);
+  assert.match(html, /id="theme-toggle"/);
+  assert.match(html, />ESP</);
+  assert.match(html, />ENG</);
+  assert.match(html, /class="theme-icon"/);
+  assert.match(html, /ABRIR ARCHIVO/);
+  assert.match(html, /LINK DE SCRATCH/);
+  assert.match(html, />URL</);
+  assert.match(html, /WINDOWS \.EXE/);
+  assert.match(html, /ANDROID \.APK/);
+  assert.doesNotMatch(html, /value="android" disabled/);
+  assert.match(html, /MODO CONTROL/);
+  assert.match(html, /name="mode" value="test" checked/);
+  assert.doesNotMatch(html, /name="mode" value="final" checked/);
+  assert.match(html, /MODO FINAL/);
+  assert.match(html, /CREAR APP/);
+  assert.match(html, /ARQUITECTURA WINDOWS:/);
+  assert.match(html, /SALIDA:/);
+  assert.match(html, />03</);
+  assert.match(html, /<h2 data-i18n="process">PROCESAR<\/h2>/);
+  assert.match(html, /id="cancel-app"/);
+  assert.match(html, /aria-label="Interrumpir conversión"/);
+  assert.match(html, /aria-hidden="true">X</);
+  assert.doesNotMatch(html, />INTERRUMPIR</);
+  assert.match(html, /EJECUTAR APP/);
+  assert.match(html, /CONVERSIÓN FINALIZADA CON ÉXITO/);
+  assert.match(html, /PROCESANDO PROYECTO DE SCRATCH/);
+  assert.doesNotMatch(html, /PROFE ADRIEL/);
+  assert.doesNotMatch(html, /ELEVENLEVEN SOFTWARE/);
+  assert.match(html, /id="about-open"/);
+  assert.match(html, /11:11 &lt;dev&gt;/);
+  assert.match(html, /id="about-dialog"/);
+  assert.match(html, /id="github-link"[^>]*aria-label="GitHub"/);
+  assert.match(html, /id="linkedin-link"[^>]*aria-label="LinkedIn"/);
+  assert.doesNotMatch(html, /id="github-link"[^>]*>GitHub<\/button>/);
+  assert.doesNotMatch(html, /id="linkedin-link"[^>]*>LinkedIn<\/button>/);
+  assert.doesNotMatch(html, /SCRATCH A APLICACIÓN/);
+  assert.doesNotMatch(html, /CREAR OTRA/);
+  assert.doesNotMatch(html, />USAR</);
+  assert.doesNotMatch(html, /PANTALLA/);
+  assert.doesNotMatch(html, /COMPLETA/);
+  assert.doesNotMatch(html, /OPCIONES AVANZADAS/);
+  assert.match(css, /\[hidden\] \{ display: none !important; \}/);
+  assert.match(css, /--primary-c: #843043/);
+  assert.match(css, /\.toggle-switch \{[^}]*border: 1px solid var\(--border\)[^}]*background: var\(--button-disabled\)/);
+  assert.match(css, /\.toggle-thumb \{[^}]*background: var\(--toggle-thumb\)/);
+  assert.doesNotMatch(css, /\.toggle-switch\[aria-checked="true"\] \.toggle-thumb \{[^}]*background:/);
+  assert.match(css, /--logo-color: #f1efe6/);
+  assert.match(css, /:root\[data-theme="light"\][\s\S]*--logo-color: #141118/);
+  assert.match(css, /:root\[data-theme="light"\][\s\S]*--toggle-thumb: #353535/);
+  assert.match(css, /:root\[data-theme="light"\][\s\S]*--primary-a: #806817/);
+  assert.match(css, /:root\[data-theme="light"\][\s\S]*--primary-b: #7130a5/);
+  assert.match(css, /:root\[data-theme="light"\][\s\S]*--primary-c: #7a293d/);
+  assert.match(css, /mask: url\("assets\/scrapp-logo\.svg"\)/);
+  assert.match(css, /:root\[data-theme="light"\]/);
+  assert.match(css, /--background: #f1efe6/);
+  assert.match(css, /\.brand-cell \{ position: absolute; left: 50%/);
+  assert.match(css, /\.about-links \{ display: flex; align-items: center/);
+});
+
+test("desktop preferences support persistent language and color modes", async () => {
+  const renderer = await readFile(new URL("../desktop/renderer.js", import.meta.url), "utf8");
+  assert.match(renderer, /localStorage\.getItem\("scrapp-language"\)/);
+  assert.match(renderer, /localStorage\.getItem\("scrapp-theme"\)/);
+  assert.match(renderer, /state\.language === "es" \? "en" : "es"/);
+  assert.match(renderer, /state\.theme === "dark" \? "light" : "dark"/);
+  assert.match(renderer, /document\.documentElement\.dataset\.theme = state\.theme/);
+  assert.match(renderer, /aboutTitle: "ACERCA DE SCRAPP"/);
+  assert.match(renderer, /aboutTitle: "ABOUT SCRAPP"/);
+  assert.match(renderer, /byId\("about-dialog"\)\.showModal\(\)/);
+});
+
+test("about dialog uses the real app version and exact LinkedIn profile", async () => {
+  const main = await readFile(new URL("../desktop/main.cjs", import.meta.url), "utf8");
+  const preload = await readFile(new URL("../desktop/preload.cjs", import.meta.url), "utf8");
+  assert.match(main, /ipcMain\.handle\("get-app-version", \(\) => app\.getVersion\(\)\)/);
+  assert.match(main, /https:\/\/www\.linkedin\.com\/in\/adrielyosoy\/\?isSelfProfile=true/);
+  assert.match(main, /https:\/\/github\.com\/adrionbass/);
+  assert.match(main, /icon: appIconPath/);
+  assert.match(main, /app\.setAppUserModelId\("Scrapp"\)/);
+  assert.match(preload, /getAppVersion/);
+  assert.match(preload, /openLinkedIn/);
+  assert.match(preload, /openGitHub/);
+});
+
+test("desktop confirms replacements and selects the exported artifact", async () => {
+  const main = await readFile(new URL("../desktop/main.cjs", import.meta.url), "utf8");
+  const renderer = await readFile(new URL("../desktop/renderer.js", import.meta.url), "utf8");
+  assert.match(main, /Ya existe un archivo con el nombre/);
+  assert.match(main, /\["Sí", "No"\]/);
+  assert.match(main, /shell\.showItemInFolder\(artifactPath\)/);
+  assert.match(renderer, /result\.artifactPath \|\| state\.result\.executablePath/);
+});
+
+test("canceling an export immediately restores the creation controls", async () => {
+  const main = await readFile(new URL("../desktop/main.cjs", import.meta.url), "utf8");
+  const renderer = await readFile(new URL("../desktop/renderer.js", import.meta.url), "utf8");
+  assert.match(main, /activeExport = null;\s*operation\.controller\.abort\(\)/);
+  assert.match(renderer, /state\.operationId \+= 1/);
+  assert.match(renderer, /byId\("progress-panel"\)\.hidden = true/);
+  assert.match(renderer, /byId\("create-app"\)\.disabled = !state\.source/);
+  assert.match(renderer, /if \(operationId !== state\.operationId\) return/);
+});

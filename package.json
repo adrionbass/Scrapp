@@ -1,0 +1,21 @@
+{
+  "name": "scrapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop application for exporting Scratch projects to Windows and Android.",
+  "author": "Adriel Miño",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/adrionbass",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build:exporter": "node tools/build-exporter-windows.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@turbowarp/jszip": "3.12.0",
+    "@turbowarp/packager": "3.13.0"
+  }
+}

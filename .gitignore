@@ -1,0 +1,15 @@
+node_modules/
+outputs/
+work/
+
+*.log
+*.tmp
+*.dmp
+*.trc
+*.idsig
+*.keystore
+*.jks
+*.p12
+
+.DS_Store
+Thumbs.db

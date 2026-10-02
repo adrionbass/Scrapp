@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'">
+  <title>Scrapp</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-cell">
+      <span class="scrapp-logo" role="img" aria-label="Scrapp"></span>
+    </div>
+    <div class="preference-cell" aria-label="Preferencias">
+      <div class="preference-row">
+        <span>ESP</span>
+        <button id="language-toggle" class="toggle-switch" type="button" role="switch" aria-checked="false" aria-label="Cambiar idioma">
+          <span class="toggle-thumb"></span>
+        </button>
+        <span>ENG</span>
+      </div>
+      <div class="preference-row">
+        <span class="theme-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
+        <button id="theme-toggle" class="toggle-switch" type="button" role="switch" aria-checked="true" aria-label="Cambiar modo de color">
+          <span class="toggle-thumb"></span>
+        </button>
+        <span class="theme-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2z"></path></svg></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="source-section">
+      <div class="section-title"><span>01</span><h1 data-i18n="project">PROYECTO</h1><i id="source-led"></i></div>
+      <div id="drop-zone" class="source-grid">
+        <button id="pick-file" class="source-button" type="button">
+          <span class="source-icon">SB3</span>
+          <span><strong data-i18n="openFile">ABRIR ARCHIVO</strong><small data-i18n="chooseProject">Elegí tu proyecto de Scratch</small></span>
+        </button>
+        <div id="link-deck" class="link-box">
+          <span class="source-icon url-icon">URL</span>
+          <label class="link-content" for="scratch-link">
+            <span data-i18n="scratchLink">LINK DE SCRATCH</span>
+            <input id="scratch-link" type="text" placeholder="scratch.mit.edu/projects/123..." spellcheck="false">
+          </label>
+        </div>
+      </div>
+      <button id="source-status" class="selection source-selection" type="button">NINGÚN PROYECTO SELECCIONADO</button>
+    </section>
+
+    <section class="settings-section">
+      <div class="section-title"><span>02</span><h2 data-i18n="settings">CONFIGURACIÓN</h2></div>
+      <div class="settings-grid">
+        <fieldset>
+          <legend data-i18n="target">DESTINO</legend>
+          <div class="segment">
+            <label><input type="radio" name="target" value="windows" checked><span>WINDOWS .EXE</span></label>
+            <label><input type="radio" name="target" value="android"><span>ANDROID .APK</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="version">VERSIÓN</legend>
+          <div class="segment">
+            <label><input type="radio" name="mode" value="test" checked><span data-i18n="controlMode">MODO CONTROL</span></label>
+            <label><input type="radio" name="mode" value="final"><span data-i18n="finalMode">MODO FINAL</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="compact-options">
+        <button id="output-picker" class="inline-setting output-setting" type="button">
+          <span class="inline-label" data-i18n="output">SALIDA:</span>
+          <span id="output-path-text" class="compact-panel">ESCRITORIO</span>
+        </button>
+        <div id="architecture-setting" class="inline-setting architecture-setting" role="group" aria-label="Arquitectura Windows">
+          <span class="inline-label" data-i18n="windowsArchitecture">ARQUITECTURA WINDOWS:</span>
+          <div class="segment narrow">
+            <label><input type="radio" name="architecture" value="x86" checked><span>32 BITS</span></label>
+            <label><input type="radio" name="architecture" value="x64"><span>64 BITS</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="action-panel" class="action-panel">
+      <div class="section-title action-title"><span>03</span><h2 data-i18n="process">PROCESAR</h2></div>
+      <div class="create-actions">
+        <button id="create-app" class="create-button" type="button" disabled data-i18n="createApp">CREAR APP</button>
+        <button id="cancel-app" class="cancel-button" type="button" aria-label="Interrumpir conversión" title="Interrumpir" disabled><span aria-hidden="true">X</span></button>
+      </div>
+      <div class="result-actions">
+        <button id="open-folder" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5h7l2 2h9v10H3z"/></svg><span data-i18n="openFolder">ABRIR CARPETA</span></button>
+        <button id="run-app" type="button" disabled><svg class="flag-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18M6 4c4-3 8 3 13 0v10c-5 3-9-3-13 0z"/></svg><span data-i18n="runApp">EJECUTAR APP</span></button>
+      </div>
+      <div id="progress-panel" class="progress-panel" hidden>
+        <div><strong id="progress-title" data-i18n="processing">PROCESANDO PROYECTO DE SCRATCH...</strong><span id="progress-percent">0%</span></div>
+        <progress id="progress" max="100" value="0"></progress>
+        <p id="progress-message">Revisando proyecto...</p>
+      </div>
+      <div id="done-panel" class="done-panel" hidden>
+        <strong data-i18n="ready">¡LISTO!</strong><span data-i18n="conversionSuccess">CONVERSIÓN FINALIZADA CON ÉXITO</span>
+      </div>
+      <div id="error-panel" class="error-panel" hidden></div>
+    </section>
+  </main>
+
+  <footer><button id="about-open" type="button">11:11 &lt;dev&gt;</button></footer>
+
+  <dialog id="about-dialog" class="about-dialog" aria-labelledby="about-title">
+    <div class="about-window">
+      <header class="about-header">
+        <h2 id="about-title" data-i18n="aboutTitle">ACERCA DE SCRAPP</h2>
+        <button id="about-close" type="button" aria-label="Cerrar" title="Cerrar">×</button>
+      </header>
+      <div class="about-content">
+        <h3>SCRAPP</h3>
+        <p class="about-version"><span data-i18n="versionLabel">Versión:</span> <strong id="app-version">...</strong></p>
+        <p data-i18n="aboutDescription">ScrApp es una herramienta de escritorio que permite convertir proyectos de Scratch en aplicaciones independientes.</p>
+        <div class="about-credits">
+          <p><span data-i18n="developedBy">Desarrollado por</span> <strong>Adriel Miño</strong></p>
+          <p>11:11 &lt;dev&gt;</p>
+        </div>
+        <div class="about-links">
+          <button id="github-link" class="about-link" type="button" aria-label="GitHub" title="GitHub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.82a9.6 9.6 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.77c0 .27.18.58.69.48A10 10 0 0 0 12 2z"></path></svg>
+          </button>
+          <button id="linkedin-link" class="about-link" type="button" aria-label="LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.3 8.3H2.2V22h3.1V8.3zM3.75 2A1.8 1.8 0 1 0 3.75 5.6 1.8 1.8 0 0 0 3.75 2zM22 14.2c0-4.1-2.2-6-5.1-6-2.35 0-3.4 1.3-4 2.2V8.3H9.8V22h3.1v-6.8c0-1.8.35-3.6 2.65-3.6 2.27 0 2.3 2.12 2.3 3.72V22H22v-7.8z"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="about-footer">© 2026 11:11 &lt;dev&gt;</div>
+    </div>
+  </dialog>
+  <script src="renderer.js"></script>
+</body>
+</html>
