@@ -173,11 +173,13 @@ footer button:hover, footer button:focus-visible { color: var(--text-primary); }
 .about-content h3 { margin: 0 0 7px; color: var(--text-primary); font-size: 20px; }
 .about-content p { margin: 0 0 14px; }
 .about-version { font-size: 11px; }
+.about-bottom { display: grid; grid-template-columns: 1fr 76px; align-items: end; gap: 24px; }
 .about-credits { margin-top: 20px; color: var(--text-primary); }
 .about-credits p { margin-bottom: 5px; }
 .about-links { display: flex; align-items: center; gap: 7px; margin-top: 14px; }
 .about-link { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 3px; padding: 5px; background: transparent; color: var(--primary-b); }
 .about-link svg { width: 100%; height: 100%; fill: currentColor; }
 .about-link:hover, .about-link:focus-visible { border-color: var(--primary-b); background: var(--hover-panel); color: var(--text-primary); }
+.about-signature { width: 76px; height: 102px; background: var(--logo-color); -webkit-mask: url("assets/adriel-signature.svg") center / contain no-repeat; mask: url("assets/adriel-signature.svg") center / contain no-repeat; }
 .about-footer { padding: 10px 22px; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 9px; text-align: right; }
 @media (max-width: 780px) { .source-grid, .settings-grid, .compact-options { grid-template-columns: 1fr; } .compact-options { min-height: auto; } main { margin-top: 8px; } }
