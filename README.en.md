@@ -28,7 +28,7 @@ Compiled versions are distributed through the [Releases](https://github.com/adri
 
 ### General use
 
-- Windows 10 or 11.
+- Windows 7 SP1, 8, 8.1, 10, or 11.
 - An Internet connection to import projects by URL and download components that are not already cached.
 
 ### Android export

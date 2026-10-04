@@ -28,7 +28,7 @@ La versión compilada se distribuye desde la sección [Releases](https://github.
 
 ### Uso general
 
-- Windows 10 u 11.
+- Windows 7 SP1, 8, 8.1, 10 u 11.
 - Conexión a Internet para importar proyectos mediante URL y descargar componentes que todavía no estén en caché.
 
 ### Exportación a Android
