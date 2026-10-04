@@ -40,6 +40,7 @@ test("desktop UI exposes both project input methods and export choices", async (
   assert.match(html, /id="about-dialog"/);
   assert.match(html, /id="github-link"[^>]*aria-label="GitHub"/);
   assert.match(html, /id="linkedin-link"[^>]*aria-label="LinkedIn"/);
+  assert.match(html, /class="about-signature" aria-hidden="true"/);
   assert.doesNotMatch(html, /id="github-link"[^>]*>GitHub<\/button>/);
   assert.doesNotMatch(html, /id="linkedin-link"[^>]*>LinkedIn<\/button>/);
   assert.doesNotMatch(html, /SCRATCH A APLICACIÓN/);
@@ -64,6 +65,7 @@ test("desktop UI exposes both project input methods and export choices", async (
   assert.match(css, /--background: #f1efe6/);
   assert.match(css, /\.brand-cell \{ position: absolute; left: 50%/);
   assert.match(css, /\.about-links \{ display: flex; align-items: center/);
+  assert.match(css, /\.about-signature \{[^}]*background: var\(--logo-color\)[^}]*assets\/adriel-signature\.svg/);
 });
 
 test("desktop preferences support persistent language and color modes", async () => {
